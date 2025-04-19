@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile - Order History</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: #f0f2f5;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    nav {
+      background-color: #1a2a44;
+      padding: 1rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      color: white;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+    }
+
+    .nav-links li {
+      margin-left: 2rem;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      color: #ff6f61;
+    }
+
+    main {
+      flex: 1;
+      width: 80%;
+      max-width: 900px;
+      margin: 2.5rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      color: #1a2a44;
+      position: relative;
+    }
+
+    h1::after {
+      content: "";
+      display: block;
+      width: 70px;
+      height: 3px;
+      background-color: #1a2a44;
+      margin: 0.5rem auto 1rem;
+    }
+
+    .order {
+      background: linear-gradient(to right, #ffffff, #f1f5f9);
+      border: 1px solid #d0d7de;
+      border-radius: 10px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .order:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .order h3 {
+      color: #1a2a44;
+      font-size: 1.2rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .order p {
+      font-size: 0.95rem;
+      color: #333;
+      margin: 0.3rem 0;
+      line-height: 1.4;
+    }
+
+    .order p strong {
+      color: #1a2a44;
+    }
+
+    .no-orders {
+      text-align: center;
+      font-size: 1.1rem;
+      padding: 2rem;
+      color: #999;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    footer {
+      background-color: #1a2a44;
+      color: #fff;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+      font-weight: 300;
+    }
+
+    footer a {
+      color: #ff6f61;
+      text-decoration: none;
+      margin: 0 10px;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: #e65b50;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">RMS</div>
+    <ul class="nav-links">
+      <li><a href="home.html">Home</a></li>
+      <li><a href="menu.html">Menu</a></li>
+      <li><a href="cart.html">Cart</a></li>
+      <li><a href="login.html">Logout</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <h1>Your Order History</h1>
+    <div id="orders-container">
+      <!-- Orders will be dynamically inserted here -->
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 Restaurant Management System. All rights reserved. | 
+      <a href="#">Privacy Policy</a> | 
+      <a href="#">Terms of Service</a>
+    </p>
+  </footer>
+
+  <script>
+    async function loadOrderHistory() {
+        const email = localStorage.getItem("userEmail");
+        console.log("Fetching orders for email:", email); // Debug log
+
+        if (!email) {
+            alert("Please log in first!");
+            window.location.href = "login.html";
+            return;
+        }
+
+        try {
+            const res = await fetch(`http://localhost:5000/orders/${encodeURIComponent(email)}`);
+            if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+
+            const orders = await res.json();
+            console.log("Received orders:", orders); // Debug log of full response
+
+            const container = document.getElementById("orders-container");
+
+            if (!Array.isArray(orders) || orders.length === 0) {
+                container.innerHTML = `<p class="no-orders">You haven't placed any orders yet.</p>`;
+                return;
+            }
+
+            container.innerHTML = "";
+            orders.forEach((order, index) => {
+                const orderDiv = document.createElement("div");
+                orderDiv.classList.add("order");
+
+                // Format the date
+                const orderDate = new Date(order.createdAt);
+                const formattedDate = isNaN(orderDate.getTime()) 
+                    ? "Date not available" 
+                    : orderDate.toLocaleString();
+
+                // Calculate total from items
+                const calculatedTotal = order.items.reduce(
+                    (sum, item) => sum + (item.price * item.quantity || 0),
+                    0
+                );
+
+                // Format items list
+                const itemsHTML = order.items.map(item => `
+                    <p class="order-item">${item.name || 'Unknown'} (x${item.quantity || 1}) - ₹${(item.price || 0).toFixed(2)}</p>
+                `).join("");
+
+                orderDiv.innerHTML = `
+                    <h3>Order #${index + 1} (ID: ${order._id})</h3>
+                    <p><strong>📅 Date:</strong> ${formattedDate}</p>
+                    <div class="order-details">
+                        ${itemsHTML}
+                        <p class="order-total"><strong>Total:</strong> ₹${calculatedTotal.toFixed(2)}</p>
+                    </div>
+                `;
+
+                container.appendChild(orderDiv);
+            });
+
+        } catch (error) {
+            console.error("Error loading order history:", error);
+            const container = document.getElementById("orders-container");
+            container.innerHTML = `<p class="no-orders">Error loading orders. Please try again later.</p>`;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadOrderHistory);
+</script>
+</body>
+</html>

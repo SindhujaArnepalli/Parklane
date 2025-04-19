@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> PARKLANE </title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: #1a2a44;
+            padding: 1rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .logo {
+            color: #fff;
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .navbar .nav-links {
+            list-style: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .nav-links li {
+            margin-left: 2.5rem;
+        }
+
+        .navbar .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+        }
+
+        .navbar .nav-links a:hover {
+            color: #ff6f61;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: calc(100vh - 60px);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #fff;
+            overflow: hidden;
+            margin-top: 60px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("background.jpg") no-repeat center center/cover;
+            filter: blur(2px);
+            z-index: -1;
+            transform: scale(1.1);
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            font-weight: 300;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-content .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .hero-content .btn {
+            background-color: #ff6f61;
+            color: #fff;
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .hero-content .btn.admin-btn {
+            background-color: #1a2a44;
+        }
+
+        .hero-content .btn:hover {
+            background-color: #e65b50;
+        }
+
+        .hero-content .btn.admin-btn:hover {
+            background-color: #ff6f61;
+        }
+
+        /* Modern Image Scroll with Card Design */
+    .image-scroll {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        margin: 40px auto;
+        max-width: 1000px;
+        overflow-x: auto;
+        padding: 20px 0;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none; /* Firefox */
+        position: relative;
+        z-index: 2;
+      }
+      
+      .image-scroll::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Edge */
+      }
+      
+      .image-card {
+        scroll-snap-align: center;
+        flex: 0 0 300px;
+        height: 200px;
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+      
+      .image-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      }
+      .image-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+      
+      .image-card:hover img {
+        transform: scale(1.1);
+      }
+      
+      .image-card .overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+        padding: 20px;
+        color: white;
+        text-align: left;
+      }
+      
+      .image-card .overlay h3 {
+        font-size: 18px;
+        margin-bottom: 5px;
+      }
+    
+        /* Contact Section */
+        .contact {
+            padding: 6rem 3rem;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        .contact h2 {
+            font-size: 2.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #1a2a44;
+        }
+
+        .contact p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #666;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact .btn {
+            background-color: #1a2a44;
+            color: #fff;
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .contact .btn:hover {
+            background-color: #ff6f61;
+        }
+
+        #contact-info {
+            display: flex;
+            justify-content: space-between;
+        }
+    
+        .contact-details {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+    
+        .contact-section {
+            width: 48%;
+        }
+    
+        .contact-section ul {
+            list-style-type: none;
+            padding: 0;
+        }
+    
+        .contact-section li {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1a2a44;
+            color: #fff;
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.9rem;
+            font-weight: 300;
+            margin-top: 3rem;
+        }
+
+        footer a {
+            color: #ff6f61;
+            text-decoration: none;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #e65b50;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0.8rem 1.5rem;
+            }
+
+            .navbar .nav-links li {
+                margin-left: 1.5rem;
+            }
+
+            .hero {
+                height: calc(100vh - 50px);
+                margin-top: 50px;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            .hero-content .btn-group {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features h2, .contact h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">PARKLANE</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="admin_login.html">Admin Login</a></li>
+            <li><a href="user_login.html">User Login</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Smart Parking <br>For Modern Cities</h1>
+            <p>Find, book, and access parking spots instantly with AI-powered plate recognition technology.</p>        
+            <div class="btn-group">
+                <a href="admin_login.html" class="btn admin-btn">Admin Login</a>
+                <a href="user_login.html" class="btn">User Login</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Image Cards -->
+  <div class="image-scroll" id="features">
+    <div class="image-card">
+      <img src="https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?cs=srgb&dl=pexels-mikebirdy-170811.jpg&fm=jpg" alt="Smart Parking">
+      <div class="overlay">
+        <h3>AI-Powered Access</h3>
+        <p>Automatic number plate recognition</p>
+      </div>
+    </div>
+    <div class="image-card">
+      <img src="https://etimg.etb2bimg.com/photo/107684845.cms" alt="Modern Garage">
+      <div class="overlay">
+        <h3>Premium Facilities</h3>
+        <p>Clean, secure parking spaces</p>
+      </div>
+    </div>
+    <div class="image-card">
+      <img src="https://d112y698adiu2z.cloudfront.net/photos/production/software_photos/001/917/679/datas/original.png" alt="Mobile App">
+      <div class="overlay">
+        <h3>Mobile Integration</h3>
+        <p>Book and manage from your phone</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <h2>Get in Touch</h2>
+        <p>Ready to transform your Parking Lot? Contact us today to schedule a demo or get support.</p>
+        <a href="javascript:void(0);" class="btn" onclick="toggleContactInfo()">Contact Us</a>
+
+        <!-- Hidden contact information that will be toggled -->
+            <div class="contact-details">
+                <div class="contact-section">
+                    <p><strong>Phone Numbers:</strong></p>
+                    <ul>
+                        <li>+1 (555) 123-4567</li>
+                        <li>+1 (555) 987-6543</li>
+                    </ul>
+                </div>
+                <div class="contact-section">
+                    <p><strong>Emails:</strong></p>
+                    <ul>
+                        <li>info@parklane.com</li>
+                        <li>support@parklane.com</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 PARKLANE. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </footer>
+
+    <script>
+        function toggleContactInfo() {
+            const contactInfo = document.getElementById('contact-info');
+            if (contactInfo.style.display === "none") {
+                contactInfo.style.display = "block";
+            } else {
+                contactInfo.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

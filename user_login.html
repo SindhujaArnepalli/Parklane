@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #1a1a1a; /* Dark background for a sleek feel */
+            margin: 0;
+        }
+
+        /* Background Image Container */
+        .img-con {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("car-background.jpg") no-repeat center center/cover;
+            filter: brightness(0.7);
+            z-index: -1; /* Ensures image stays behind content */
+        }
+
+        .img-con::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(6px); /* Adding a subtle blur effect */
+        }
+
+        /* Form Container */
+        .container {
+            width: 100%;
+            max-width: 450px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+            border-radius: 15px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.6);
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        .io {
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.7);
+            padding: 12px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .io:focus {
+            outline: none;
+            border-bottom: 1px solid #ff6f61; /* Accent color */
+        }
+
+        /* Button Container */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ff6f61, #ff3b2e); /* Gradient red */
+            width: 250px;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            cursor: pointer;
+            font-size: 18px;
+            border-radius: 50px;
+            border: none;
+            transition: 0.3s;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn:hover {
+            background: linear-gradient(45deg, #ff3b2e, #ff6f61); /* Reverse gradient */
+            box-shadow: 0px 0px 25px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Forgot Password & Sign Up Link */
+        .forgot-password {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .forgot-password a {
+            color: #ff6f61;
+            font-size: 14px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .forgot-password a:hover {
+            color: #e0e0e0;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 20px;
+            color: white;
+            font-size: 14px;
+        }
+
+        .signup-link a {
+            color: #ff6f61;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .signup-link a:hover {
+            color: #e0e0e0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .img-con {
+                display: none;
+            }
+
+            .container {
+                width: 90%;
+                height: auto;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="img-con"></div>
+    <div class="container">
+        <h1>Login</h1>
+
+        <form id="login-form">
+            <div class="input-container">
+                <label for="email">Email</label>
+                <input class="io" type="email" id="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="input-container">
+                <label for="password">Password</label>
+                <input class="io" type="password" id="password" placeholder="Enter your password" required>
+            </div>
+
+            <div class="forgot-password">
+                <a href="forgot.html">Forgot Password?</a>
+            </div>
+
+            <div class="btn-container">
+                <input type="submit" class="btn" value="Login">
+            </div>
+
+            <div class="signup-link">
+                Don't have an account? <a href="user_signup.html">Sign Up</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("login-form").addEventListener("submit", async (event) => {
+            event.preventDefault(); // Prevent form reload
+    
+            // Get user input
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+    
+            if (!email || !password) {
+                alert("Please fill in all fields.");
+                return;
+            }
+    
+            try {
+                // Send login request
+                const response = await fetch("http://localhost:5000/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password }),
+                });
+    
+                const result = await response.json(); // Parse JSON response
+                console.log("Login Response:", result); // Debugging
+    
+                if (response.ok) {
+                    // Clear previous localStorage to avoid stale data
+                    localStorage.clear();
+                    
+                    // Store user info in localStorage with consistent key
+                    localStorage.setItem("userEmail", result.email); // Consistent with profile.html
+                    localStorage.setItem("name", result.name);
+                    
+                    console.log("Stored userEmail:", localStorage.getItem("userEmail")); // Debug log
+                    
+                    alert("Login successful!");
+                    window.location.href = "user_home.html"; // Redirect to homepage
+                } else {
+                    alert(result.message || "Invalid credentials. Try again.");
+                }
+            } catch (error) {
+                console.error("Login error:", error);
+                alert("An error occurred. Please try again later.");
+            }
+        });
+    </script>
+</body>
+</html>

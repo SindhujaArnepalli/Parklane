@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login </title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background-image: url('https://bsmedia.business-standard.com/_media/bs/img/article/2020-10/21/full/1603260569-8705.jpg?im=FeatureCrop,size=(826,465)');
+           
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                height: 100vh;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-family: Arial, sans-serif;
+            }
+            
+            .login-container {
+                background: rgba(255, 255, 255, 0.9);
+                padding: 30px;
+                border-radius: 15px;
+                box-shadow: 0 0 15px rgba(0,0,0,0.3);
+                text-align: center;
+            }
+        .login-container h1 {
+            font-size: 2rem;
+            color: #1a2a44;
+            margin-bottom: 1.5rem;
+        }
+        .login-container input, .login-container button {
+            margin: 10px 0;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+        .login-container input:focus {
+            border-color: #ff6f61;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 0.8rem;
+            margin-top: 1rem;
+            background-color: #ff6f61;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .login-container button:hover {
+            background-color: #0056b3;
+        }
+        .login-container button .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+        .login-container button.loading-state .loading {
+            display: block;
+        }
+        .login-container button.loading-state span {
+            visibility: hidden;
+        }
+        .login-container p {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .login-container a {
+            color: #ff6f61;
+            text-decoration: none;
+        }
+        .login-container a:hover {
+            color: #e65b50;
+        }
+        .error {
+            color: #e65b50;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+            text-align: left;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #ff6f61;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Admin Login PARKLANE </h1>
+        <input type="email" id="email" placeholder="Admin Email" required aria-label="Admin Email">
+        <input type="password" id="password" placeholder="Password" required aria-label="Password">
+        <button id="loginButton" onclick="adminLogin()">
+            <span>Login</span>
+            <div class="loading"><div class="spinner"></div></div>
+        </button>
+        <p>Don't have an account? <a href="admin_signup.html">Sign Up</a></p>
+        <div id="error" class="error"></div>
+    </div>
+
+    <script>
+        async function adminLogin() {
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const errorDiv = document.getElementById("error");
+            const loginButton = document.getElementById("loginButton");
+
+            // Clear previous error and set loading state
+            errorDiv.style.display = "none";
+            errorDiv.textContent = "";
+            loginButton.classList.add("loading-state");
+
+            // Basic validation
+            if (!email || !password) {
+                errorDiv.textContent = "Please fill in all fields.";
+                errorDiv.style.display = "block";
+                loginButton.classList.remove("loading-state");
+                return;
+            }
+
+            if (!/^\S+@\S+\.\S+$/.test(email)) {
+                errorDiv.textContent = "Please enter a valid email address.";
+                errorDiv.style.display = "block";
+                loginButton.classList.remove("loading-state");
+                return;
+            }
+
+            try {
+                console.log("Attempting login with email:", email); // Debug log
+                const res = await fetch("http://localhost:5001/admin/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
+
+                console.log("Server response status:", res.status); // Debug log
+                const data = await res.json();
+                console.log("Server response data:", data); // Debug log
+
+                if (res.ok) {
+                    // Store admin details in localStorage
+                    localStorage.setItem("adminEmail", email);
+                    localStorage.setItem("adminName", data.name || "Admin"); // Fallback if name is missing
+                    alert(data.message || "Login successful!");
+                    window.location.href = "admin_home.html"; // Redirect to menu page
+                } else {
+                    errorDiv.textContent = data.message || "Login failed. Please check your credentials.";
+                    errorDiv.style.display = "block";
+                }
+            } catch (err) {
+                console.error("Login error:", err.message); // Detailed error log
+                errorDiv.textContent = "Network error. Please ensure the server is running at localhost:5001.";
+                errorDiv.style.display = "block";
+            } finally {
+                loginButton.classList.remove("loading-state"); // Reset loading state
+            }
+        }
+
+        // Add Enter key support and input event listeners
+        document.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                adminLogin();
+            }
+        });
+
+        // Focus on email input on page load
+        document.getElementById("email").focus();
+
+        // Clear localStorage on page load (optional for testing)
+        // Uncomment the line below if you want to reset login on every page load
+        // localStorage.clear();
+    </script>
+</body>
+</html>

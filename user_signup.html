@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkLane | User Registration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #0f172a url('car-background.jpg') no-repeat center center/cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .container h1 {
+            text-align: center;
+            color: #00ffcc;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        .input-container {
+            margin-bottom: 18px;
+        }
+
+        .input-container label {
+            color: #ccc;
+            margin-bottom: 5px;
+            display: block;
+            font-size: 14px;
+        }
+
+        .io {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s ease;
+        }
+
+        .io:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid #00ffcc;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .checkbox-container input {
+            margin-right: 8px;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .btn {
+            background: linear-gradient(90deg, #00ffcc, #0077ff);
+            color: black;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: linear-gradient(90deg, #0077ff, #00ffcc);
+            color: white;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 15px;
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        .signup-link a {
+            color: #00ffcc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .signup-link a:hover {
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                border-radius: 15px;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Register Your Car</h1>
+
+    <div class="input-container">
+        <label for="name">Full Name</label>
+        <input class="io" type="text" id="name" placeholder="John Doe">
+    </div>
+
+    <div class="input-container">
+        <label for="phone">Phone Number</label>
+        <input class="io" type="text" id="phone" placeholder="+1 234 567 890">
+    </div>
+
+    <div class="input-container">
+        <label for="email">Email</label>
+        <input class="io" type="email" id="email" placeholder="john@example.com">
+    </div>
+
+    <div class="input-container">
+        <label for="address">Address</label>
+        <input class="io" type="text" id="address" placeholder="123 Main Street">
+    </div>
+
+    <div class="input-container">
+        <label for="password">Password</label>
+        <input class="io" type="password" id="password" placeholder="Secure Password">
+    </div>
+
+    <div class="checkbox-container">
+        <input type="checkbox" id="terms">
+        <label for="terms">I agree to the Terms & Conditions</label>
+    </div>
+
+    <div class="btn-container">
+        <input type="submit" class="btn" value="Sign Up">
+    </div>
+
+    <div class="signup-link">
+        Already registered? <a href="user_login.html">Login here</a>
+    </div>
+</div>
+
+<script>
+    async function signUp() {
+        const name = document.getElementById("name").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const address = document.getElementById("address").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const termsAccepted = document.getElementById("terms").checked;
+
+        if (!name || !phone || !email || !address || !password) {
+            alert("Please fill in all fields!");
+            return;
+        }
+
+        if (!termsAccepted) {
+            alert("You must agree to the Terms & Conditions!");
+            return;
+        }
+
+        try {
+            const response = await fetch("http://localhost:5000/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, phone, email, address, password })
+            });
+
+            const data = await response.json();
+            alert(data.message);
+
+            if (response.ok) {
+                window.location.href = "user_login.html";
+            }
+        } catch (error) {
+            console.error("Sign-up error:", error);
+            alert("Error signing up. Please try again.");
+        }
+    }
+
+    document.querySelector(".btn").addEventListener("click", (e) => {
+        e.preventDefault();
+        signUp();
+    });
+
+    document.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            document.querySelector(".btn").click();
+        }
+    });
+</script>
+
+</body>
+</html>

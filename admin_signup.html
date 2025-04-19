@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Signup </title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Poppins', sans-serif; 
+        }
+        body {
+            background-image: url('https://assets.newatlas.com/dims4/default/6f67042/2147483647/strip/true/crop/5049x3366+57+0/resize/1200x800!/quality/90/?url=http%3A%2F%2Fnewatlas-brightspot.s3.amazonaws.com%2F75%2Fa3%2Faf7e8c39432e9f31dcc2a844b81d%2Frolls-royceboattail-thenextchapterlakecomo-12.jpg');  /* replace with your image path */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        .signup-container { 
+            background-color: rgba(231, 28, 28, 0); /* White with 80% opacity */
+            padding: 2rem; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 10px rgba(252, 248, 248, 0.1); 
+            width: 100%; 
+            max-width: 400px; 
+            text-align: center; 
+        }
+        
+        .signup-container h1 { 
+            font-size: 2rem; 
+            color: #f1f2f4; 
+            margin-bottom: 1.5rem; 
+        }
+        .signup-container input { 
+            width: 100%; 
+            padding: 0.8rem; 
+            margin: 0.5rem 0; 
+            border: 1px solid rgba(245, 235, 235, 0.947); 
+            border-radius: 5px; 
+            font-size: 1rem; 
+            outline: none; 
+            background-color: rgba(255, 255, 255, 0.2); /* Transparent background */
+            color: #e9e2e2;  /* Pure black text */
+        }
+        
+        
+        .signup-container button { 
+            width: 100%; 
+            padding: 0.8rem; 
+            margin-top: 1rem; 
+            background-color: rgba(207, 68, 68, 0.7); /* Transparent button */
+            color: #feffff; 
+            border: none; 
+            border-radius: 5px; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            transition: background-color 0.3s ease; 
+        }
+        .signup-container button:hover { 
+            background-color: #e65b50; 
+        }
+        .signup-container p { 
+            margin-top: 1rem; 
+            font-size: 0.9rem; 
+            color: #d9e0de; 
+        }
+        .signup-container a { 
+            color: #ff6f61; 
+            text-decoration: none; 
+        }
+        .signup-container a:hover { 
+            color: #e65b50; 
+        }
+        .error { 
+            color: #e65b50; 
+            font-size: 0.9rem; 
+            margin-top: 0.5rem; 
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <h1>Admin Signup</h1>
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="tel" id="phone" placeholder="Phone Number" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <input type="text" id="adminCode" placeholder="Admin Code" required>
+        <button onclick="signup()">Sign Up</button>
+        <p>Already have an account? <a href="admin_login.html">Login</a></p>
+        <div id="error" class="error"></div>
+    </div>
+
+    <script>
+        async function signup() {
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const adminCode = document.getElementById("adminCode").value.trim();
+            const errorDiv = document.getElementById("error");
+
+            if (!name || !email || !phone || !password || !adminCode) {
+                errorDiv.textContent = "Please fill in all fields.";
+                return;
+            }
+
+            try {
+                const res = await fetch("http://localhost:5001/admin/signup", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, email, phone, password, adminCode })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    alert(data.message);
+                    window.location.href = "admin_login.html";
+                } else {
+                    errorDiv.textContent = data.message || "Signup failed.";
+                }
+            } catch (err) {
+                errorDiv.textContent = "Network error. Please try again.";
+                console.error("Signup error:", err);
+            }
+        }
+    </script>
+</body>
+</html>
