@@ -43,36 +43,13 @@ ParkLane is a modern, sleek parking management system designed for malls and com
 ## 📸 Screenshots
 
 ### Login Page
-![Login Page](screenshots/login.png)
+Gonna be filled
 
-### Parking Dashboard
-![Dashboard](screenshots/dashboard.png)
+### Parking Dashboar
 
+
+/Gonna be filled
 ### Booking Interface
-![Booking](screenshots/booking.png)
+/Gonna be filled
 
-## 🛠️ Installation & Setup
 
-1. **Clone the repository**
-```bash
-git clone https://github.com/yourusername/parklane.git
-cd parklane
-```
-
-2. **Install dependencies**
-```bash
-npm install
-```
-
-3. **Set up environment variables**
-```bash
-cp .env.example .env
-# Edit .env with your configuration
-```
-
-4. **Start the server**
-```bash
-npm start
-```
-
-5. **Access the application**
